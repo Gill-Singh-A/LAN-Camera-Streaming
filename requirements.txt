@@ -1,0 +1,4 @@
+sockets
+opencv-python
+datetime
+colorama
