@@ -12,6 +12,11 @@ Modules/Packages used:
 * datetime
 * time
 * colorama
+<!-- -->
+Install the dependencies:
+```bash
+pip install -r requirements.txt
+```
 
 ## Input
 Both the programs "server.py" and "client.py" takes the same arguments from the command that is used to run the Python Program.
