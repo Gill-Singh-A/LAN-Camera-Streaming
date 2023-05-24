@@ -24,7 +24,7 @@ if __name__ == "__main__":
     client_socket, client_address = server.accept()
     display('+', f"Client Connected = {Back.MAGENTA}{client_address[0]}:{client_address[1]}{Back.RESET}")
     display('+', "Starting the Live Video Stream")
-    while True:
+    while cv2.waitKey(1) != 113:
         data = b""
         while True:
             try:
@@ -45,11 +45,10 @@ if __name__ == "__main__":
             image.append(temp)
         image = numpy.uint8(numpy.around(image))
         cv2.imshow("Image", image)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            client_socket.send("0".encode())
-            display('*', f"Disconnecting from {Back.MAGENTA}{client_address[0]}:{client_address[1]}{Back.RESET}")
-            break
         sleep(1)
         client_socket.send("1".encode())
+    else:
+        client_socket.send("0".encode())
+        display('*', f"Disconnecting from {Back.MAGENTA}{client_address[0]}:{client_address[1]}{Back.RESET}")
     server.close()
     display('*', f"Server Closed!")
