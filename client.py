@@ -58,7 +58,7 @@ class Client:
 if __name__ == "__main__":
     data = get_arguments(('-H', "--host", "host", "IPv4 Address of the Server"),
                          ('-p', "--port", "port", "Port of the Server"),
-                         ('-b', "--buffer-size", "buffer_size", "Buffer Size for Receiving Data from the Clients"))
+                         ('-b', "--buffer-size", "buffer_size", "Buffer Size for Receiving Data from the Server"))
     if not data.host:
         display('-', f"Please specify a {Back.MAGENTA}HOST{Back.RESET}")
         exit(0)
