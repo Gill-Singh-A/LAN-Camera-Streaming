@@ -1,4 +1,4 @@
-# Video Calling LAN
+# LAN Camera Streaming
 A simple Server-Client model that uses TCP Connection for streaming Live Grayscale Video from one device's camera to another device's screen on the same LAN (Local Area Network).
 
 ## Requirements
