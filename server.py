@@ -1,8 +1,8 @@
 import socket, cv2, threading, pickle
 from datetime import date
 from optparse import OptionParser
-from time import strftime, localtime
 from colorama import Fore, Back, Style
+from time import time, strftime, localtime
 
 status_color = {
     '+': Fore.GREEN,
@@ -17,8 +17,8 @@ PORT = 2626
 BUFFER_SIZE = 1024
 TIMEOUT = 1
 
-def display(status, data):
-    print(f"{status_color[status]}[{status}] {Fore.BLUE}[{date.today()} {strftime('%H:%M:%S', localtime())}] {status_color[status]}{Style.BRIGHT}{data}{Fore.RESET}{Style.RESET_ALL}")
+def display(status, data, start='', end='\n'):
+    print(f"{start}{status_color[status]}[{status}] {Fore.BLUE}[{date.today()} {strftime('%H:%M:%S', localtime())}] {status_color[status]}{Style.BRIGHT}{data}{Fore.RESET}{Style.RESET_ALL}", end=end)
 
 def get_arguments(*args):
     parser = OptionParser()
@@ -109,12 +109,16 @@ if __name__ == "__main__":
     client_address = list(server.clients.keys())[0]
     display('+', "Starting the Live Video Stream")
     while cv2.waitKey(1) != 113:
+        t1 = time()
         image = server.receive(client_address)
         cv2.imshow("Image", image)
+        t2 = time()
+        if t2 != t1:
+            display('*', f"FPS = {Back.MAGENTA}{1/(t2-t1):.2f}{Back.RESET}", start='\r', end='')
         server.send(client_address, "1")
     else:
         server.receive(client_address)
         server.send(client_address, "0")
-        display('*', f"Disconnecting from {Back.MAGENTA}{client_address[0]}:{client_address[1]}{Back.RESET}")
+        display('*', f"Disconnecting from {Back.MAGENTA}{client_address[0]}:{client_address[1]}{Back.RESET}", start='\r')
     server.close()
     display('*', f"Server Closed!")
