@@ -1,4 +1,4 @@
-import socket, cv2, numpy, json, threading
+import socket, cv2, threading, pickle
 from datetime import date
 from optparse import OptionParser
 from time import strftime, localtime
@@ -62,16 +62,16 @@ class Server:
             self.acceptClientThread.join()
             self.acceptClientThread = threading.Thread(target=self.acceptClient, daemon=True)
     def send(self, client_address, data):
-        serealized_data = json.dumps(data)
-        self.clients[client_address].send(serealized_data.encode())
+        serealized_data = pickle.dumps(data)
+        self.clients[client_address].send(serealized_data)
     def receive(self, client_address):
         data = b""
         while True:
             try:
                 data += self.clients[client_address].recv(self.buffer_size)
-                data = json.loads(data)
+                data = pickle.loads(data)
                 break
-            except ValueError:
+            except pickle.UnpicklingError:
                 pass
         return data
     def close(self):
@@ -80,10 +80,10 @@ class Server:
         self.socket.close()
 
 if __name__ == "__main__":
-    data = get_arguments(('-H', "--host", "host", f"IPv4 Address on which to start the Server (Default Value={HOST})"),
-                         ('-p', "--port", "port", f"Port on which to start the Server (Default Value={PORT})"),
-                         ('-b', "--buffer-size", "buffer_size", f"Buffer Size for Receiving Data from the Clients (Default Value={BUFFER_SIZE})"),
-                         ('-t', "--timeout", "timeout", "timeout", f"Timeout for accepting connection from Clients (Default Value={TIMEOUT})"))
+    data = get_arguments(('-H', "--host", "host", f"IPv4 Address on which to start the Server (Default={HOST})"),
+                         ('-p', "--port", "port", f"Port on which to start the Server (Default={PORT})"),
+                         ('-b', "--buffer-size", "buffer_size", f"Buffer Size for Receiving Data from the Clients (Default={BUFFER_SIZE})"),
+                         ('-t', "--timeout", "timeout", f"Timeout for accepting connection from Clients (Default={TIMEOUT})"))
     if not data.host:
         data.host = HOST
     if not data.port:
@@ -109,18 +109,7 @@ if __name__ == "__main__":
     client_address = list(server.clients.keys())[0]
     display('+', "Starting the Live Video Stream")
     while cv2.waitKey(1) != 113:
-        data = server.receive(client_address)
-        if data == "0":
-            break
-        data = data.split(';')
-        image = []
-        for row in data:
-            temp = []
-            row = row.split(':')
-            for pixel in row:
-                temp.append(int(pixel))
-            image.append(temp)
-        image = numpy.uint8(numpy.around(image))
+        image = server.receive(client_address)
         cv2.imshow("Image", image)
         server.send(client_address, "1")
     else:
