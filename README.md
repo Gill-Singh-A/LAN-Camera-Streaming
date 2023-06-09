@@ -1,13 +1,12 @@
 # LAN Camera Streaming
-A simple Server-Client model that uses TCP Connection for streaming Live Grayscale Video from one device's camera to another device's screen on the same LAN (Local Area Network).
+A simple Server-Client model that uses TCP Connection for streaming Live Video from one device's camera to another device's screen on the same LAN (Local Area Network).
 
 ## Requirements
 Language Used = Python3<br />
 Modules/Packages used:
 * socket
 * cv2
-* numpy
-* json
+* pickle
 * sys
 * datetime
 * time
@@ -20,14 +19,14 @@ pip install -r requirements.txt
 
 ## Input
 # server.py
-* '-H', "--host": IPv4 Address on which to start the Server (Default Value=0.0.0.0)
-* '-p', "--port": Port on which to start the Server (Default Value=2626)
-* '-b', "--buffer-size": Buffer Size for Receiving Data from the Clients (Default Value=1024)
-* '-t', "--timeout": Timeout for accepting connection from Clients (Default Value=1)
+* '-H', "--host": IPv4 Address on which to start the Server (Default=0.0.0.0)
+* '-p', "--port": Port on which to start the Server (Default=2626)
+* '-b', "--buffer-size": Buffer Size for Receiving Data from the Clients (Default=1024)
+* '-t', "--timeout": Timeout for accepting connection from Clients (Default=1)
 # client.py
 * '-H', "--host": IPv4 Address of the Server
 * '-p', "--port": Port of the Server
-* '-b', "--buffer_size": Buffer Size for Receiving Data from the Server
+* '-b', "--buffer_size": Buffer Size for Receiving Data from the Server (Default=1024)
 <!-- -->
 For example:
 ```bash
@@ -38,6 +37,3 @@ For client to connect to this server, the client should type the LAN IP Address 
 
 ## Output
 After successful connection, the Device that runs "server.py" can see the Live Grayscale Video captured by the camera of the device that runs "client.py".
-
-### Note
-The video stream is too slow, even though its in Grayscale, because this program uses TCP Connection instead of UDP.<br />
