@@ -51,7 +51,7 @@ class Server:
                 self.clients[client_address] = client_socket
                 if self.verbose:
                     with self.lock:
-                        display('+', f"Client Connected = {Back.RESET}{client_address[0]}:{client_address[1]}{Back.MAGENTA}")
+                        display('+', f"Client Connected = {Back.MAGENTA}{client_address[0]}:{client_address[1]}{Back.RESET}")
             except:
                 pass
     def acceptClients(self, mode):
