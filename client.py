@@ -34,7 +34,7 @@ class Client:
         try:
             self.socket.connect((self.host, self.port))
             if self.verbose:
-                display('+', f"Connected to Server {Back.RESET}{self.host}:{self.port}{Back.MAGENTA}")
+                display('+', f"Connected to Server {Back.MAGENTA}{self.host}:{self.port}{Back.RESET}")
         except:
             return -1
         else:
